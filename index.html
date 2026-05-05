@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NoteForge — Summaries, Flashcards & Smart Q&A</title>
+    <meta name="description" content="Turn books into summaries, flashcards, and smart Q&A instantly with NoteForge.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="dark-theme">
+    <!-- Parallax Background Glows -->
+    <div class="bg-glow glow-1"></div>
+    <div class="bg-glow glow-2"></div>
+    <div class="bg-glow glow-3"></div>
+    <!-- Header -->
+    <header class="navbar">
+        <div class="logo">
+            <img src="logo.png" alt="NoteForge Logo" style="width: 32px; height: 32px; border-radius: 8px;">
+            NoteForge
+        </div>
+        <div class="nav-actions">
+            <button id="themeToggle" class="icon-btn" aria-label="Toggle Dark Mode">
+                <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+                <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round" style="display: none;">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+            </button>
+        </div>
+    </header>
+    <div class="app-container">
+
+
+        <main>
+            <!-- Hero / Input Section -->
+            <section class="hero-section" id="inputSection">
+                <div class="hero-header">
+                    <h1 class="hero-title">Turn Knowledge Into <span class="highlight">Insights</span>.</h1>
+                    <p class="hero-subtitle">Instantly generate summaries, flashcards, and smart Q&A from books, PDFs, and
+                        research papers.</p>
+                </div>
+
+                <div class="input-card">
+                    <div class="input-tabs">
+                        <button class="input-tab active" data-type="text">Text</button>
+                        <button class="input-tab" data-type="file">File Upload</button>
+                    </div>
+
+                    <div class="input-content" id="textContent">
+                        <textarea id="sourceText"
+                            placeholder="Paste your text here... (e.g. an excerpt from a book or article)"
+                            rows="8"></textarea>
+                    </div>
+
+                    <div class="input-content hidden" id="fileContent">
+                        <div class="file-drop-zone" id="dropZone">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="upload-icon">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                            <p>Drag and drop a PDF or DOCX file, or <span class="browse-link">browse</span></p>
+                            <input type="file" id="fileInput" accept=".pdf,.docx" class="hidden-file-input">
+                        </div>
+                    </div>
+
+                    <div class="action-bar">
+                        <button id="generateBtn" class="primary-btn">
+                            <span class="btn-text">Generate Insights</span>
+                            <svg class="sparkle-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z">
+                                </path>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Loading State -->
+            <section class="loading-section hidden" id="loadingSection">
+                <div class="spinner"></div>
+                <p>Analyzing and synthesizing your content...</p>
+            </section>
+
+            <!-- Results Section -->
+            <section class="results-section hidden" id="resultsSection">
+                <div class="results-header">
+                    <h2>Your Insights</h2>
+                </div>
+
+                <div class="tabs-container">
+                    <div class="tabs-nav">
+                        <button class="tab-btn active" data-target="summaryTab">Summary</button>
+                        <button class="tab-btn" data-target="keyPointsTab">Key Points</button>
+                        <button class="tab-btn" data-target="flashcardsTab">Flashcards</button>
+                        <button class="tab-btn" data-target="qaTab">Q&A</button>
+                    </div>
+
+                    <div class="tabs-content-wrapper">
+                        <!-- Summary Tab -->
+                        <div class="tab-pane active" id="summaryTab">
+                            <div class="pane-header">
+                                <h3>Summary</h3>
+                                <button class="copy-btn" data-target="summaryContent" aria-label="Copy to clipboard">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="options-bar">
+                                <span class="options-label">Length:</span>
+                                <div class="segmented-control">
+                                    <button class="segment active">Short</button>
+                                    <button class="segment">Medium</button>
+                                    <button class="segment">Detailed</button>
+                                </div>
+                            </div>
+                            <div class="content-body prose" id="summaryContent">
+                                <!-- Content injected via JS -->
+                            </div>
+                        </div>
+
+                        <!-- Key Points Tab -->
+                        <div class="tab-pane" id="keyPointsTab">
+                            <div class="pane-header">
+                                <h3>Key Points</h3>
+                                <button class="copy-btn" data-target="keyPointsContent" aria-label="Copy to clipboard">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="content-body" id="keyPointsContent">
+                                <ul class="key-points-list" id="keyPointsList">
+                                    <!-- Content injected via JS -->
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Flashcards Tab -->
+                        <div class="tab-pane" id="flashcardsTab">
+                            <div class="pane-header">
+                                <h3>Flashcards</h3>
+                                <div class="flashcard-controls">
+                                    <span id="flashcardCounter">1 / 5</span>
+                                </div>
+                            </div>
+                            <div class="flashcard-container">
+                                <div class="flashcard" id="activeFlashcard">
+                                    <div class="flashcard-inner">
+                                        <div class="flashcard-front">
+                                            <span class="card-label">Question</span>
+                                            <p id="flashcardQuestion">...</p>
+                                            <p class="flip-hint">Click to flip</p>
+                                        </div>
+                                        <div class="flashcard-back">
+                                            <span class="card-label">Answer</span>
+                                            <p id="flashcardAnswer">...</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flashcard-nav">
+                                    <button class="icon-btn outline" id="prevCardBtn" disabled>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="15 18 9 12 15 6"></polyline>
+                                        </svg>
+                                    </button>
+                                    <button class="icon-btn outline" id="nextCardBtn">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="9 18 15 12 9 6"></polyline>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Q&A Tab -->
+                        <div class="tab-pane" id="qaTab">
+                            <div class="pane-header">
+                                <h3>Smart Q&A</h3>
+                                <button class="copy-btn" data-target="qaContent" aria-label="Copy to clipboard">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                        fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round">
+                                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="content-body" id="qaContent">
+                                <div class="accordion" id="qaAccordion">
+                                    <!-- Content injected via JS -->
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>&copy; 2026 NoteForge. Powered by AI.</p>
+        </footer>
+    </div>
+    <script src="app.js"></script>
+</body>
+
+</html>
